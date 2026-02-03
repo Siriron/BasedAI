@@ -115,11 +115,8 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <span className="text-2xl">✨</span>
-          <h3 className="font-bold text-[#0F172A] dark:text-white">Smart Commit Helper</h3>
+          <h3 className="font-extrabold text-white text-glow">AI Commit Helper</h3>
         </div>
-        <span className="text-xs text-[#64748B] dark:text-gray-400 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-full">
-          100% Free
-        </span>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -127,10 +124,10 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
           <button
             key={template.category}
             onClick={() => selectQuickTemplate(template.category)}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+            className={`px-3 py-2 rounded-lg text-sm font-bold transition-all ${
               selectedTemplate === template.category
-                ? 'bg-purple-500 text-white shadow-lg'
-                : 'bg-gray-100 dark:bg-gray-700 text-[#0F172A] dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-gradient-to-r from-cyber-cyan to-cyber-magenta text-white shadow-lg shadow-cyber-cyan/50'
+                : 'bg-cyber-card text-gray-300 hover:bg-gradient-to-r hover:from-cyber-cyan/20 hover:to-cyber-magenta/20 border border-cyber-cyan/30'
             }`}
           >
             <span className="mr-1">{template.emoji}</span>
@@ -140,14 +137,14 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-[#0F172A] dark:text-white">
-          Describe your project (optional):
+        <label className="text-sm font-bold text-cyber-cyan">
+          Describe your project:
         </label>
         <textarea
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="e.g., A lending protocol for small businesses..."
-          className="w-full px-4 py-3 bg-white dark:bg-gray-700 border-2 border-purple-200 dark:border-purple-600 rounded-lg text-[#0F172A] dark:text-white placeholder-[#64748B] focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+          className="w-full px-4 py-3 bg-cyber-card border-2 border-cyber-cyan/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyber-cyan focus:shadow-lg focus:shadow-cyber-cyan/30 resize-none transition-all"
           rows="2"
         />
       </div>
@@ -155,24 +152,24 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
       <div className="flex items-center space-x-2">
         <button
           onClick={generateSuggestions}
-          className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-lg hover:shadow-lg transition-all"
+          className="flex-1 px-4 py-2 bg-gradient-to-r from-cyber-magenta to-cyber-pink text-white font-extrabold rounded-lg hover:shadow-lg hover:shadow-cyber-magenta/50 transition-all hover:scale-105"
         >
           ✨ Get Ideas
         </button>
         {userInput.trim() && (
           <button
             onClick={improveText}
-            className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-all"
+            className="px-4 py-2 bg-gradient-to-r from-cyber-cyan to-blue-500 text-white font-extrabold rounded-lg hover:shadow-lg hover:shadow-cyber-cyan/50 transition-all hover:scale-105"
           >
-            ✍️ Use My Text
+            ✍️ Use
           </button>
         )}
       </div>
 
       {suggestions.length > 0 && (
         <div className="space-y-2 animate-fadeIn">
-          <p className="text-sm font-medium text-[#0F172A] dark:text-white">
-            💡 Suggestions (click to use):
+          <p className="text-sm font-bold text-cyber-lime">
+            💡 Click to use:
           </p>
           {suggestions.map((suggestion, i) => (
             <button
@@ -182,31 +179,15 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
                 setSuggestions([]);
                 setUserInput('');
               }}
-              className="w-full text-left p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-700 rounded-lg hover:shadow-md transition-all group"
+              className="w-full text-left p-3 bg-gradient-to-r from-cyber-card to-cyber-card/50 border border-cyber-cyan/30 rounded-lg hover:border-cyber-cyan hover:shadow-lg hover:shadow-cyber-cyan/30 transition-all group"
             >
-              <div className="flex items-start justify-between">
-                <p className="text-sm text-[#0F172A] dark:text-white flex-1 pr-2">
-                  {suggestion}
-                </p>
-                <span className="text-xs text-purple-600 dark:text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  Click →
-                </span>
-              </div>
+              <p className="text-sm text-white font-semibold group-hover:text-glow">
+                {suggestion}
+              </p>
             </button>
           ))}
         </div>
       )}
-
-      <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
-        <div className="flex items-start space-x-2">
-          <span className="text-lg">💚</span>
-          <div className="flex-1">
-            <p className="text-xs text-green-900 dark:text-green-200">
-              <strong>100% Free:</strong> No API keys, no costs! Uses smart templates. You sign transactions with your wallet (only Base gas fee).
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
