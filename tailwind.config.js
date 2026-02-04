@@ -8,15 +8,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cyber: {
-          dark: '#0a0a0f',
-          card: '#1a1a2e',
-          cyan: '#00f0ff',
-          magenta: '#ff00ff',
-          lime: '#00ff88',
-          yellow: '#ffdd00',
-          pink: '#ff006e',
-        },
+        'cyber-dark': '#0a0a0f',
+        'cyber-card': '#1a1a2e',
+        'cyber-cyan': '#00f0ff',
+        'cyber-magenta': '#ff00ff',
+        'cyber-lime': '#00ff88',
+        'cyber-yellow': '#ffdd00',
+        'cyber-pink': '#ff006e',
       },
       animation: {
         'glow': 'glow 3s ease-in-out infinite',
@@ -72,4 +70,22 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    'bg-cyber-dark',
+    'bg-cyber-card',
+    'text-cyber-cyan',
+    'text-cyber-magenta',
+    'text-cyber-lime',
+    'text-cyber-yellow',
+    'text-cyber-pink',
+    'border-cyber-cyan',
+    'border-cyber-magenta',
+    'border-cyber-lime',
+    'border-cyber-yellow',
+    'border-cyber-pink',
+    'from-cyber-cyan',
+    'to-cyber-magenta',
+    'shadow-cyber-cyan',
+    'shadow-cyber-magenta',
+  ],
 }
