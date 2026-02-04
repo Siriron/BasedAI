@@ -96,12 +96,12 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
   };
 
   const quickTemplates = [
-    { emoji: '🏦', label: 'DeFi', category: 'defi' },
-    { emoji: '🎨', label: 'NFT', category: 'nft' },
-    { emoji: '🏛️', label: 'DAO', category: 'dao' },
-    { emoji: '🛠️', label: 'Tools', category: 'infrastructure' },
-    { emoji: '💬', label: 'Social', category: 'social' },
-    { emoji: '🎮', label: 'Gaming', category: 'gaming' },
+    { emoji: '🏦', label: 'DeFi', category: 'defi', color: 'from-emerald-500 to-teal-500' },
+    { emoji: '🎨', label: 'NFT', category: 'nft', color: 'from-pink-500 to-rose-500' },
+    { emoji: '🏛️', label: 'DAO', category: 'dao', color: 'from-purple-500 to-indigo-500' },
+    { emoji: '🛠️', label: 'Tools', category: 'infrastructure', color: 'from-blue-500 to-cyan-500' },
+    { emoji: '💬', label: 'Social', category: 'social', color: 'from-orange-500 to-amber-500' },
+    { emoji: '🎮', label: 'Gaming', category: 'gaming', color: 'from-violet-500 to-fuchsia-500' },
   ];
 
   const selectQuickTemplate = (category) => {
@@ -113,9 +113,11 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="text-2xl">✨</span>
-          <h3 className="font-extrabold text-white text-glow">AI Commit Helper</h3>
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg">
+            <span className="text-xl">✨</span>
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white">AI Commit Helper</h3>
         </div>
       </div>
 
@@ -124,51 +126,51 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
           <button
             key={template.category}
             onClick={() => selectQuickTemplate(template.category)}
-            className={`px-3 py-2 rounded-lg text-sm font-bold transition-all ${
+            className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
               selectedTemplate === template.category
-                ? 'bg-gradient-to-r from-cyber-cyan to-cyber-magenta text-white shadow-lg shadow-cyber-cyan/50'
-                : 'bg-cyber-card text-gray-300 hover:bg-gradient-to-r hover:from-cyber-cyan/20 hover:to-cyber-magenta/20 border border-cyber-cyan/30'
+                ? `bg-gradient-to-r ${template.color} text-white shadow-lg scale-105`
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
-            <span className="mr-1">{template.emoji}</span>
+            <span className="mr-1.5">{template.emoji}</span>
             {template.label}
           </button>
         ))}
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-bold text-cyber-cyan">
-          Describe your project:
+        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+          Describe your project
         </label>
         <textarea
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="e.g., A lending protocol for small businesses..."
-          className="w-full px-4 py-3 bg-cyber-card border-2 border-cyber-cyan/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyber-cyan focus:shadow-lg focus:shadow-cyber-cyan/30 resize-none transition-all"
+          className="input resize-none"
           rows="2"
         />
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex gap-2">
         <button
           onClick={generateSuggestions}
-          className="flex-1 px-4 py-2 bg-gradient-to-r from-cyber-magenta to-cyber-pink text-white font-extrabold rounded-lg hover:shadow-lg hover:shadow-cyber-magenta/50 transition-all hover:scale-105"
+          className="flex-1 btn-primary"
         >
-          ✨ Get Ideas
+          ✨ Generate Ideas
         </button>
         {userInput.trim() && (
           <button
             onClick={improveText}
-            className="px-4 py-2 bg-gradient-to-r from-cyber-cyan to-blue-500 text-white font-extrabold rounded-lg hover:shadow-lg hover:shadow-cyber-cyan/50 transition-all hover:scale-105"
+            className="btn-secondary"
           >
-            ✍️ Use
+            ✍️ Use Mine
           </button>
         )}
       </div>
 
       {suggestions.length > 0 && (
-        <div className="space-y-2 animate-fadeIn">
-          <p className="text-sm font-bold text-cyber-lime">
+        <div className="space-y-2 animate-fade-in">
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
             💡 Click to use:
           </p>
           {suggestions.map((suggestion, i) => (
@@ -179,11 +181,17 @@ const FreeAIAssistant = ({ onCommitGenerated }) => {
                 setSuggestions([]);
                 setUserInput('');
               }}
-              className="w-full text-left p-3 bg-gradient-to-r from-cyber-card to-cyber-card/50 border border-cyber-cyan/30 rounded-lg hover:border-cyber-cyan hover:shadow-lg hover:shadow-cyber-cyan/30 transition-all group"
+              className="w-full text-left p-4 card group hover:scale-[1.01]"
             >
-              <p className="text-sm text-white font-semibold group-hover:text-glow">
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                 {suggestion}
               </p>
+              <div className="mt-2 flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                <span>Click to use</span>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
             </button>
           ))}
         </div>
