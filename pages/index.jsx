@@ -26,38 +26,12 @@ const playSound = (type, soundEnabled) => {
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
     switch(type) {
-      case 'connect':
-        oscillator.frequency.value = 800;
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.3);
-        break;
-      case 'success':
-        oscillator.frequency.value = 1000;
-        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.2);
-        break;
-      case 'achievement':
-        oscillator.frequency.value = 1200;
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.5);
-        break;
-      case 'error':
-        oscillator.frequency.value = 300;
-        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.15);
-        break;
+      case 'connect': oscillator.frequency.value = 800; gainNode.gain.setValueAtTime(0.3, audioContext.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3); oscillator.start(audioContext.currentTime); oscillator.stop(audioContext.currentTime + 0.3); break;
+      case 'success': oscillator.frequency.value = 1000; gainNode.gain.setValueAtTime(0.2, audioContext.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2); oscillator.start(audioContext.currentTime); oscillator.stop(audioContext.currentTime + 0.2); break;
+      case 'achievement': oscillator.frequency.value = 1200; gainNode.gain.setValueAtTime(0.3, audioContext.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5); oscillator.start(audioContext.currentTime); oscillator.stop(audioContext.currentTime + 0.5); break;
+      case 'error': oscillator.frequency.value = 300; gainNode.gain.setValueAtTime(0.2, audioContext.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15); oscillator.start(audioContext.currentTime); oscillator.stop(audioContext.currentTime + 0.15); break;
     }
-  } catch(e) {
-    console.log('Sound not supported');
-  }
+  } catch(e) {}
 };
 
 const getTodaysPuzzleIndex = () => {
@@ -85,7 +59,7 @@ const calculateStreak = (commits, userAddress) => {
 
 const getAchievements = (streak, totalCommits, isPuzzleSolved) => {
   const badges = [];
-  if (totalCommits >= 1) badges.push({ name: "First Commit", icon: "🎯", gradient: "from-cyan-500 to-blue-500" });
+  if (totalCommits >= 1) badges.push({ name: "First Commit", icon: "🎯", gradient: "from-blue-500 to-cyan-500" });
   if (streak >= 3) badges.push({ name: "3-Day Streak", icon: "🔥", gradient: "from-orange-500 to-red-500" });
   if (streak >= 7) badges.push({ name: "Week Warrior", icon: "⚡", gradient: "from-yellow-500 to-orange-500" });
   if (streak >= 30) badges.push({ name: "Month Master", icon: "👑", gradient: "from-purple-500 to-pink-500" });
@@ -94,88 +68,35 @@ const getAchievements = (streak, totalCommits, isPuzzleSolved) => {
   return badges;
 };
 
-const FloatingParticles = () => (
-  <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-    {[...Array(15)].map((_, i) => (
-      <div
-        key={i}
-        className="absolute w-1 h-1 bg-cyber-cyan rounded-full animate-float"
-        style={{
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          animationDelay: `${Math.random() * 5}s`,
-          animationDuration: `${10 + Math.random() * 10}s`,
-          opacity: 0.4 + Math.random() * 0.3
-        }}
-      />
-    ))}
-  </div>
-);
-
 const Confetti = ({ show }) => {
   if (!show) return null;
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
       {[...Array(50)].map((_, i) => (
         <div key={i} className="absolute animate-confetti" style={{left: `${Math.random() * 100}%`, top: '-10px', animationDelay: `${Math.random() * 0.5}s`, animationDuration: `${2 + Math.random() * 2}s`}}>
-          <div className="w-2 h-2 rounded-full" style={{backgroundColor: ['#00f0ff', '#ff00ff', '#00ff88', '#ffdd00', '#ff006e'][Math.floor(Math.random() * 5)], transform: `rotate(${Math.random() * 360}deg)`}} />
+          <div className="w-3 h-3 rounded-full" style={{backgroundColor: ['#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#10B981'][Math.floor(Math.random() * 5)]}} />
         </div>
       ))}
-    </div>
-  );
-};
-
-const TiltCard = ({ children, className, onClick }) => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    setTilt({x: (y - 0.5) * 8, y: (x - 0.5) * -8});
-  };
-  const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
-  return (
-    <div className={className} onClick={onClick} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${tilt.x || tilt.y ? 1.05 : 1})`, transition: 'all 0.3s ease-out'}}>
-      {children}
+      <style jsx>{`
+        @keyframes confetti {
+          0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        .animate-confetti { animation: confetti linear forwards; }
+      `}</style>
     </div>
   );
 };
 
 const Badge = ({ badge, isNew }) => (
-  <div className={`relative inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-extrabold text-white bg-gradient-to-r ${badge.gradient} ${isNew ? 'animate-bounce' : ''} shadow-lg hover:shadow-2xl transition-all hover:scale-105`}>
+  <div className={`badge bg-gradient-to-r ${badge.gradient} text-white ${isNew ? 'animate-bounce' : ''} relative`}>
     <span className="text-lg">{badge.icon}</span>
     <span>{badge.name}</span>
-    {isNew && <span className="absolute -top-1 -right-1 w-3 h-3 bg-cyber-yellow rounded-full animate-ping" />}
+    {isNew && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-yellow-400 rounded-full animate-ping" />}
   </div>
 );
 
-const TypingText = ({ text }) => {
-  const [displayText, setDisplayText] = useState('');
-  const [showCursor, setShowCursor] = useState(true);
-  
-  useEffect(() => {
-    let index = 0;
-    const typingInterval = setInterval(() => {
-      if (index < text.length) {
-        setDisplayText(text.slice(0, index + 1));
-        index++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, 100);
-    
-    const cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
-    }, 500);
-    
-    return () => {
-      clearInterval(typingInterval);
-      clearInterval(cursorInterval);
-    };
-  }, [text]);
-  
-  return <span>{displayText}{showCursor && <span className="text-cyber-cyan">|</span>}</span>;
-};export default function Home() {
+export default function Home() {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [contract, setContract] = useState(null);
@@ -184,6 +105,7 @@ const TypingText = ({ text }) => {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [txStatus, setTxStatus] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
   const [expandedCard, setExpandedCard] = useState(null);
   const [showBadge, setShowBadge] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -224,9 +146,7 @@ const TypingText = ({ text }) => {
       data.streak = calculateStreak(commits, addr);
     });
     return Array.from(userMap.values()).sort((a, b) => (b.streak * 10 + b.commits) - (a.streak * 10 + a.commits)).slice(0, 5);
-  }, [commits]);
-
-  const connectWallet = async () => {
+  }, [commits]);const connectWallet = async () => {
     try {
       if (typeof window.ethereum !== 'undefined') {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -308,12 +228,12 @@ const TypingText = ({ text }) => {
     if (!contract || !newMessage.trim()) return;
     const oldStats = { ...userStats };
     setLoading(true);
-    setTxStatus('⏳ Pending...');
+    setTxStatus('⏳ Sending transaction...');
     try {
       const tx = await contract.setCommit(newMessage);
-      setTxStatus('🚀 Transaction sent! Confirming...');
+      setTxStatus('⏳ Confirming on Base...');
       await tx.wait();
-      setTxStatus('✅ Confirmed!');
+      setTxStatus('✅ Success!');
       setShowBadge(true);
       playSound('success', soundEnabled);
       setTimeout(() => setShowBadge(false), 3000);
@@ -341,10 +261,10 @@ const TypingText = ({ text }) => {
   const clearCommit = async () => {
     if (!contract) return;
     setLoading(true);
-    setTxStatus('🗑️ Clearing...');
+    setTxStatus('⏳ Clearing...');
     try {
       const tx = await contract.clearCommit();
-      setTxStatus('🚀 Transaction sent! Confirming...');
+      setTxStatus('⏳ Confirming...');
       await tx.wait();
       setTxStatus('✅ Cleared!');
       playSound('success', soundEnabled);
@@ -380,7 +300,7 @@ const TypingText = ({ text }) => {
         setTimeout(() => setNewAchievements([]), 5000);
       }
     } else {
-      setTxStatus('❌ Not quite! Try again or use a hint.');
+      setTxStatus('❌ Not quite! Try again.');
       playSound('error', soundEnabled);
       setTimeout(() => setTxStatus(''), 3000);
     }
@@ -400,65 +320,72 @@ const TypingText = ({ text }) => {
 
   const formatAddress = (addr) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   const formatTimestamp = (ts) => new Date(ts * 1000).toLocaleString();
-  const getAvatarColor = (addr) => {
-    const colors = ['#00f0ff', '#ff00ff', '#00ff88', '#ffdd00', '#ff006e'];
-    const index = parseInt(addr.slice(2, 8), 16) % colors.length;
-    return colors[index];
-  };
 
   return (
-    <div className="dark">
+    <div className={darkMode ? 'dark' : ''}>
       <Head>
-        <title>Base Agent - Onchain Builder Intent</title>
-        <meta name="description" content="AI-powered onchain commitment agent on Base" />
+        <title>Base Agent - Builder Intent Onchain</title>
+        <meta name="description" content="Track builder commitments on Base blockchain" />
       </Head>
 
       <Confetti show={showConfetti} />
-      <FloatingParticles />
 
-      <div className="min-h-screen bg-cyber-dark text-white relative overflow-hidden">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         
-        <div className="fixed inset-0 bg-gradient-to-br from-cyber-dark via-purple-900/10 to-cyber-dark pointer-events-none"></div>
-
-        <header className="relative border-b border-cyber-cyan/20 bg-cyber-card/50 backdrop-blur-md z-10">
+        <header className="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyber-cyan to-cyber-magenta rounded-lg flex items-center justify-center shadow-lg shadow-cyber-cyan/50 animate-pulse-glow">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                   <span className="text-2xl">🤖</span>
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-black text-glow">
-                    <TypingText text="BASE AGENT" />
-                  </h1>
-                  <p className="text-xs sm:text-sm text-cyber-cyan font-bold">Onchain Builder Intent</p>
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Base Agent</h1>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">Builder Intent Onchain</p>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <button 
-                  onClick={() => setShowLeaderboard(!showLeaderboard)} 
-                  className="hidden md:flex items-center space-x-1 px-4 py-2 rounded-lg bg-gradient-to-r from-cyber-yellow to-cyber-lime text-black text-sm font-extrabold hover:shadow-lg hover:shadow-cyber-yellow/50 transition-all hover:scale-105"
-                >
-                  <span>🏆</span>
-                  <span>TOP 5</span>
-                </button>
+              <div className="flex items-center gap-3">
+                {showLeaderboard && (
+                  <button 
+                    onClick={() => setShowLeaderboard(false)} 
+                    className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                  >
+                    <span>🏆</span>
+                    <span>Top 5</span>
+                  </button>
+                )}
+                {!showLeaderboard && leaderboard.length > 0 && (
+                  <button 
+                    onClick={() => setShowLeaderboard(true)} 
+                    className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+                  >
+                    <span>🏆</span>
+                    <span>Leaderboard</span>
+                  </button>
+                )}
                 <button 
                   onClick={() => setSoundEnabled(!soundEnabled)} 
-                  className="p-2 rounded-lg bg-cyber-card border border-cyber-cyan/30 hover:border-cyber-cyan hover:shadow-lg hover:shadow-cyber-cyan/30 transition-all"
+                  className="p-3 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
                   title={soundEnabled ? 'Mute sounds' : 'Enable sounds'}
                 >
-                  {soundEnabled ? '🔊' : '🔇'}
+                  <span className="text-lg">{soundEnabled ? '🔊' : '🔇'}</span>
+                </button>
+                <button 
+                  onClick={() => setDarkMode(!darkMode)} 
+                  className="p-3 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+                >
+                  <span className="text-lg">{darkMode ? '☀️' : '🌙'}</span>
                 </button>
                 {!account ? (
                   <button 
                     onClick={connectWallet} 
-                    className="px-4 sm:px-6 py-2.5 bg-gradient-to-r from-cyber-cyan to-blue-500 text-white font-extrabold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg shadow-cyber-cyan/50 hover:shadow-cyber-cyan/80"
+                    className="btn-primary"
                   >
-                    CONNECT WALLET
+                    Connect Wallet
                   </button>
                 ) : (
-                  <div className="px-4 py-2 bg-gradient-to-r from-cyber-lime/20 to-cyber-cyan/20 border border-cyber-lime rounded-lg text-cyber-lime font-extrabold text-sm">
+                  <div className="px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-500 dark:border-green-400 rounded-xl text-green-700 dark:text-green-400 font-bold text-sm">
                     {formatAddress(account)}
                   </div>
                 )}
@@ -467,13 +394,13 @@ const TypingText = ({ text }) => {
           </div>
         </header>
 
-        <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 z-10">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           
           {newAchievements.length > 0 && (
-            <div className="fixed top-20 right-4 z-50 animate-slideIn">
-              <div className="bg-cyber-card rounded-xl shadow-2xl p-4 border-2 border-cyber-cyan shadow-cyber-cyan/50">
-                <p className="text-sm font-extrabold text-cyber-cyan mb-2">🎉 NEW ACHIEVEMENT!</p>
-                <div className="space-y-2">
+            <div className="fixed top-24 right-4 z-50 animate-slide-up">
+              <div className="card p-4 border-2 border-blue-500 shadow-2xl max-w-sm">
+                <p className="text-sm font-bold text-gray-900 dark:text-white mb-3">🎉 Achievement Unlocked!</p>
+                <div className="flex flex-wrap gap-2">
                   {newAchievements.map((badge, i) => (
                     <Badge key={i} badge={badge} isNew={true} />
                   ))}
@@ -482,33 +409,33 @@ const TypingText = ({ text }) => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="lg:col-span-2 space-y-6">
               {account && (
                 <>
-                  <div className="p-4 sm:p-6 bg-glass rounded-2xl border-2 border-cyber-cyan/30 shadow-2xl shadow-cyber-cyan/20 animate-glow">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
-                      <h2 className="text-xl sm:text-2xl font-black text-glow">YOUR COMMITMENT</h2>
+                  <div className="card p-6 animate-fade-in">
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Commitment</h2>
                       {showBadge && (
-                        <div className="animate-bounce bg-gradient-to-r from-cyber-lime to-cyber-cyan text-black px-4 py-2 rounded-full text-sm font-extrabold shadow-lg">
-                          COMMITTED! 🎉
+                        <div className="animate-bounce bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                          Submitted! 🎉
                         </div>
                       )}
                     </div>
                     
-                    <div className="mb-4 p-4 bg-gradient-to-r from-cyber-cyan/10 to-cyber-magenta/10 rounded-xl border border-cyber-cyan/30">
-                      <div className="grid grid-cols-2 gap-4 mb-3">
-                        <div className="text-center p-3 bg-cyber-card/50 rounded-lg">
-                          <p className="text-4xl sm:text-6xl font-black text-cyber-cyan text-glow">{userStats.streak}</p>
-                          <p className="text-xs sm:text-sm text-gray-400 font-bold mt-1">DAY STREAK 🔥</p>
+                    <div className="mb-6 p-6 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-700">
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+                          <p className="text-5xl font-black text-blue-600 dark:text-blue-400 mb-1">{userStats.streak}</p>
+                          <p className="text-xs uppercase tracking-wider text-gray-600 dark:text-gray-400 font-semibold">Day Streak 🔥</p>
                         </div>
-                        <div className="text-center p-3 bg-cyber-card/50 rounded-lg">
-                          <p className="text-4xl sm:text-6xl font-black text-cyber-lime text-glow">{userStats.totalCommits}</p>
-                          <p className="text-xs sm:text-sm text-gray-400 font-bold mt-1">TOTAL COMMITS</p>
+                        <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+                          <p className="text-5xl font-black text-green-600 dark:text-green-400 mb-1">{userStats.totalCommits}</p>
+                          <p className="text-xs uppercase tracking-wider text-gray-600 dark:text-gray-400 font-semibold">Total Commits</p>
                         </div>
                       </div>
                       {userAchievements.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-3">
+                        <div className="flex flex-wrap gap-2">
                           {userAchievements.map((badge, i) => (
                             <Badge key={i} badge={badge} isNew={false} />
                           ))}
@@ -516,106 +443,108 @@ const TypingText = ({ text }) => {
                       )}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-6">
                       <FreeAIAssistant onCommitGenerated={(commit) => setNewMessage(commit)} />
                     </div>
 
                     {userCommit.message && (
-                      <div className="mb-4 p-4 bg-cyber-cyan/10 border border-cyber-cyan/50 rounded-lg">
-                        <p className="text-sm font-bold text-cyber-cyan mb-1">CURRENT:</p>
-                        <p className="text-white font-semibold">{userCommit.message}</p>
-                        <p className="text-xs text-gray-400 mt-2">Updated: {formatTimestamp(userCommit.timestamp)}</p>
+                      <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl">
+                        <p className="text-sm font-bold text-blue-900 dark:text-blue-300 mb-1">Current Commitment:</p>
+                        <p className="text-gray-900 dark:text-white font-medium mb-2">{userCommit.message}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Last updated: {formatTimestamp(userCommit.timestamp)}</p>
                       </div>
                     )}
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-cyber-magenta">OR WRITE YOUR OWN:</label>
+                    <div className="space-y-3">
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300">
+                        Your Message:
+                      </label>
                       <textarea 
                         value={newMessage} 
                         onChange={(e) => setNewMessage(e.target.value)} 
-                        placeholder="Type your commitment here..." 
-                        className="w-full px-4 py-3 bg-cyber-card border-2 border-cyber-magenta/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyber-magenta focus:shadow-lg focus:shadow-cyber-magenta/30 resize-none font-semibold transition-all" 
-                        rows="3" 
+                        placeholder="Write your commitment or use AI suggestions above..." 
+                        className="input resize-none"
+                        rows="4" 
                         disabled={loading} 
                       />
                     </div>
 
-                    <div className="mt-4 flex flex-col sm:flex-row items-center gap-3">
+                    <div className="mt-4 flex gap-3">
                       <button 
                         onClick={submitCommit} 
                         disabled={loading || !newMessage.trim()} 
-                        className="w-full sm:flex-1 px-6 py-3 bg-gradient-to-r from-cyber-cyan to-cyber-magenta hover:shadow-xl disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-extrabold rounded-lg transition-all duration-200 transform hover:scale-105 disabled:transform-none shadow-lg shadow-cyber-cyan/50 text-lg"
+                        className="flex-1 btn-primary text-lg"
                       >
-                        {loading ? '⏳ PROCESSING...' : userCommit.message ? '🔄 UPDATE' : '✅ SUBMIT'}
+                        {loading ? '⏳ Processing...' : userCommit.message ? '🔄 Update' : '✅ Submit'}
                       </button>
                       {userCommit.message && (
                         <button 
                           onClick={clearCommit} 
                           disabled={loading} 
-                          className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyber-pink to-red-500 hover:shadow-xl disabled:from-gray-600 disabled:to-gray-600 text-white font-extrabold rounded-lg transition-all duration-200 shadow-lg shadow-cyber-pink/50"
+                          className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 disabled:opacity-50"
                         >
-                          🗑️ CLEAR
+                          🗑️ Clear
                         </button>
                       )}
                     </div>
 
                     {txStatus && (
-                      <div className={`mt-3 p-3 rounded-lg text-sm font-bold ${txStatus.includes('Error') || txStatus.includes('❌') ? 'bg-cyber-pink/20 text-cyber-pink border border-cyber-pink/50' : 'bg-cyber-lime/20 text-cyber-lime border border-cyber-lime/50'}`}>
+                      <div className={`mt-4 p-4 rounded-xl text-sm font-semibold ${txStatus.includes('Error') || txStatus.includes('❌') ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-2 border-red-200 dark:border-red-700' : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-2 border-green-200 dark:border-green-700'}`}>
                         {txStatus}
                       </div>
                     )}
-                  </div><div className="p-4 sm:p-6 bg-glass rounded-2xl border-2 border-cyber-magenta/30 shadow-2xl shadow-cyber-magenta/20 animate-glow">
+                  </div><div className="card p-6 animate-fade-in">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-xl sm:text-2xl font-black text-cyber-magenta text-glow flex items-center space-x-2">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <span>🧩</span>
-                        <span>DAILY PUZZLE</span>
+                        <span>Daily Puzzle</span>
                       </h2>
                       {puzzleSolved && (
-                        <span className="px-3 py-1 bg-gradient-to-r from-cyber-lime to-cyber-cyan text-black text-xs font-extrabold rounded-full">
-                          SOLVED! ✓
+                        <span className="px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold rounded-full shadow-lg">
+                          SOLVED ✓
                         </span>
                       )}
                     </div>
                     
                     {!puzzleSolved ? (
                       <>
-                        <p className="text-white mb-4 text-sm sm:text-base leading-relaxed font-semibold">{todaysPuzzle.question}</p>
+                        <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{todaysPuzzle.question}</p>
                         
                         <input 
                           type="text" 
                           value={puzzleAnswer} 
                           onChange={(e) => setPuzzleAnswer(e.target.value)} 
                           placeholder="Your answer..." 
-                          className="w-full px-4 py-3 bg-cyber-card border-2 border-cyber-magenta/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyber-magenta focus:shadow-lg focus:shadow-cyber-magenta/50 mb-3 font-semibold" 
+                          className="input mb-3"
                           onKeyPress={(e) => e.key === 'Enter' && solvePuzzle()} 
                         />
                         
-                        <div className="flex flex-col sm:flex-row items-center gap-2">
+                        <div className="flex gap-2">
                           <button 
                             onClick={solvePuzzle} 
-                            className="w-full sm:flex-1 px-4 py-3 bg-gradient-to-r from-cyber-magenta to-cyber-pink text-white font-extrabold rounded-lg hover:shadow-lg hover:shadow-cyber-magenta/50 transition-all hover:scale-105"
+                            className="flex-1 btn-primary"
                           >
-                            ✅ SUBMIT ANSWER
+                            ✅ Submit Answer
                           </button>
                           <button 
                             onClick={() => setShowPuzzleHint(!showPuzzleHint)} 
-                            className="w-full sm:w-auto px-4 py-3 bg-gradient-to-r from-cyber-yellow to-cyber-lime text-black font-extrabold rounded-lg hover:shadow-lg hover:shadow-cyber-yellow/50 transition-all hover:scale-105"
+                            className="px-4 py-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
                           >
-                            💡 HINT
+                            💡 Hint
                           </button>
                         </div>
                         
                         {showPuzzleHint && (
-                          <div className="mt-3 p-3 bg-cyber-yellow/20 border border-cyber-yellow/50 rounded-lg animate-fadeIn">
-                            <p className="text-sm text-cyber-yellow font-bold">💡 {todaysPuzzle.hint}</p>
+                          <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-700 rounded-xl animate-fade-in">
+                            <p className="text-sm text-yellow-800 dark:text-yellow-300 font-semibold">💡 {todaysPuzzle.hint}</p>
                           </div>
                         )}
                       </>
                     ) : (
                       <div className="text-center py-8">
                         <p className="text-6xl mb-3 animate-bounce">🎉</p>
-                        <p className="text-2xl font-black text-cyber-lime text-glow mb-2">PUZZLE COMPLETE!</p>
-                        <p className="text-sm text-gray-400 font-semibold">Come back tomorrow for a new challenge!</p>
+                        <p className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">Puzzle Complete!</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Come back tomorrow for a new challenge</p>
                       </div>
                     )}
                   </div>
@@ -623,34 +552,34 @@ const TypingText = ({ text }) => {
               )}
             </div>
 
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-6">
               {showLeaderboard && leaderboard.length > 0 && (
-                <div className="p-4 sm:p-6 bg-glass rounded-2xl border-2 border-cyber-yellow/30 shadow-2xl shadow-cyber-yellow/20 animate-glow">
-                  <h2 className="text-xl sm:text-2xl font-black text-cyber-yellow text-glow mb-4 flex items-center space-x-2">
+                <div className="card p-6 animate-fade-in">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <span>🏆</span>
-                    <span>TOP BUILDERS</span>
+                    <span>Top Builders</span>
                   </h2>
                   <div className="space-y-3">
                     {leaderboard.map((user, i) => (
                       <div 
                         key={user.address} 
-                        className={`p-3 rounded-lg transition-all hover:scale-105 ${
+                        className={`p-4 rounded-xl transition-all hover:scale-105 ${
                           i === 0 
-                            ? 'bg-gradient-to-r from-cyber-yellow/30 to-cyber-lime/30 border-2 border-cyber-yellow shadow-lg shadow-cyber-yellow/50' 
-                            : 'bg-cyber-card border border-cyber-cyan/30'
+                            ? 'bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/30 dark:to-amber-900/30 border-2 border-yellow-400 dark:border-yellow-600 shadow-lg' 
+                            : 'bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center gap-3">
                             <span className="text-2xl">{i === 0 ? '👑' : i === 1 ? '🥈' : i === 2 ? '🥉' : '⭐'}</span>
                             <div>
-                              <p className="text-sm font-extrabold text-white">{formatAddress(user.address)}</p>
-                              <p className="text-xs text-gray-400 font-semibold">{user.commits} commits</p>
+                              <p className="text-sm font-bold text-gray-900 dark:text-white">{formatAddress(user.address)}</p>
+                              <p className="text-xs text-gray-600 dark:text-gray-400">{user.commits} commits</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-2xl font-black text-cyber-cyan text-glow">{user.streak}</p>
-                            <p className="text-xs text-gray-400 font-semibold">🔥 streak</p>
+                            <p className="text-2xl font-black text-blue-600 dark:text-blue-400">{user.streak}</p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">🔥 streak</p>
                           </div>
                         </div>
                       </div>
@@ -661,35 +590,35 @@ const TypingText = ({ text }) => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <h2 className="text-2xl sm:text-3xl font-black text-glow">LIVE FEED</h2>
-              <div className="flex items-center space-x-2 text-sm">
-                <div className="w-2 h-2 bg-cyber-lime rounded-full animate-pulse shadow-lg shadow-cyber-lime/50"></div>
-                <span className="text-cyber-lime font-bold">{commits.length} ACTIVE</span>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Live Feed</h2>
+              <div className="flex items-center gap-2 text-sm">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                <span className="text-gray-600 dark:text-gray-400 font-semibold">{commits.length} Active</span>
               </div>
             </div>
 
             {commits.length === 0 ? (
-              <div className="text-center py-16 bg-glass rounded-2xl border-2 border-cyber-cyan/30">
-                <div className="text-6xl mb-4 animate-pulse">📝</div>
-                <p className="text-gray-400 font-bold text-lg">No commitments yet</p>
+              <div className="card p-12 text-center">
+                <div className="text-6xl mb-4">📝</div>
+                <p className="text-xl font-bold text-gray-900 dark:text-white mb-2">No commitments yet</p>
+                <p className="text-gray-600 dark:text-gray-400">Be the first to commit!</p>
               </div>
             ) : (
-              <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2">
                 {commits.map((commit, idx) => (
-                  <TiltCard 
+                  <div 
                     key={commit.user} 
-                    className="group bg-glass rounded-xl border-2 border-cyber-cyan/30 p-4 sm:p-5 hover:border-cyber-cyan hover:shadow-2xl hover:shadow-cyber-cyan/50 transition-all duration-300 cursor-pointer animate-fadeIn" 
+                    className="card p-5 cursor-pointer hover:scale-[1.02] transition-all animate-fade-in" 
                     style={{ animationDelay: `${idx * 50}ms` }} 
                     onClick={() => setExpandedCard(expandedCard === commit.user ? null : commit.user)}
                   >
-                    <div className="flex items-start space-x-3">
+                    <div className="flex items-start gap-3">
                       <div 
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-black flex-shrink-0 shadow-lg text-sm sm:text-base" 
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 shadow-lg"
                         style={{ 
-                          backgroundColor: getAvatarColor(commit.user),
-                          boxShadow: `0 0 20px ${getAvatarColor(commit.user)}80`
+                          backgroundColor: ['#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#10B981'][parseInt(commit.user.slice(2, 8), 16) % 5]
                         }}
                       >
                         {commit.user.slice(2, 4).toUpperCase()}
@@ -697,43 +626,43 @@ const TypingText = ({ text }) => {
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-extrabold text-white text-sm">{formatAddress(commit.user)}</span>
-                          <span className="text-xs text-gray-400 font-semibold">{new Date(commit.timestamp * 1000).toLocaleDateString()}</span>
+                          <span className="font-bold text-gray-900 dark:text-white text-sm">{formatAddress(commit.user)}</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{new Date(commit.timestamp * 1000).toLocaleDateString()}</span>
                         </div>
                         
-                        <p className={`text-gray-200 font-semibold ${expandedCard === commit.user ? '' : 'line-clamp-2'} leading-relaxed text-sm sm:text-base`}>
+                        <p className={`text-gray-700 dark:text-gray-300 leading-relaxed ${expandedCard === commit.user ? '' : 'line-clamp-2'}`}>
                           {commit.message}
                         </p>
                         
                         {expandedCard === commit.user && (
-                          <div className="mt-3 pt-3 border-t border-cyber-cyan/30 space-y-2 animate-fadeIn">
-                            <p className="text-xs text-gray-400 font-semibold">
-                              <span className="text-cyber-cyan font-bold">TIMESTAMP:</span> {formatTimestamp(commit.timestamp)}
+                          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2 animate-fade-in">
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              <span className="font-bold">Time:</span> {formatTimestamp(commit.timestamp)}
                             </p>
-                            <div className="flex flex-wrap items-center gap-2 text-xs">
+                            <div className="flex flex-wrap gap-2 text-xs">
                               <a 
                                 href={`https://basescan.org/address/${commit.user}`} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
-                                className="inline-flex items-center space-x-1 text-cyber-cyan hover:text-cyber-magenta font-bold transition-colors" 
+                                className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold" 
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                <span>VIEW ADDRESS</span>
+                                <span>View Address</span>
                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
                               </a>
                               {commit.txHash && (
                                 <>
-                                  <span className="text-gray-600">•</span>
+                                  <span className="text-gray-400">•</span>
                                   <a 
                                     href={`https://basescan.org/tx/${commit.txHash}`} 
                                     target="_blank" 
                                     rel="noopener noreferrer" 
-                                    className="inline-flex items-center space-x-1 text-cyber-cyan hover:text-cyber-magenta font-bold transition-colors" 
+                                    className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold" 
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <span>VIEW TX</span>
+                                    <span>View TX</span>
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
@@ -745,36 +674,21 @@ const TypingText = ({ text }) => {
                         )}
                       </div>
                     </div>
-                  </TiltCard>
+                  </div>
                 ))}
               </div>
             )}
           </div>
-        </main></div>
+        </main>
 
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes confetti {
-          0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-          100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-        @keyframes slideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-        }
-        .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
-        .animate-confetti { animation: confetti linear forwards; }
-        .animate-slideIn { animation: slideIn 0.5s ease-out; }
-        .line-clamp-2 { 
-          display: -webkit-box; 
-          -webkit-line-clamp: 2; 
-          -webkit-box-orient: vertical; 
-          overflow: hidden; 
-        }
-      `}</style>
+        <footer className="mt-16 border-t border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+              <p className="font-semibold">Built on Base ⛓️</p>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
-}
+                    }
