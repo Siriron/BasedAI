@@ -316,6 +316,7 @@ export default function Home() {
     <div style={{minHeight: '100vh', background: bg, color: text, fontFamily: 'system-ui, -apple-system, sans-serif', transition: 'all 0.3s'}}>
       <Head>
         <title>Base Agent</title>
+        <meta name="base:app_id" content="6984513a4609f1d788ad2b9a" />
       </Head>
 
       <Confetti show={showConfetti} />
