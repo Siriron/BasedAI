@@ -262,6 +262,10 @@ export default function Home() {
     fetchCommits();
     const interval = setInterval(fetchCommits, 15000);
     return () => clearInterval(interval);
+  }, [fetchCommits]);useEffect(() => {
+    fetchCommits();
+    const interval = setInterval(fetchCommits, 15000);
+    return () => clearInterval(interval);
   }, [fetchCommits]);
 
   useEffect(() => {
@@ -418,7 +422,9 @@ export default function Home() {
                       <p style={{fontWeight: '700', color: '#1E40AF', marginBottom: '12px'}}>Current:</p>
                       <p style={{fontSize: '16px', color: '#1F2937', lineHeight: '1.6'}}>{userCommit.message}</p>
                     </div>
-                  )}<textarea 
+                  )}
+
+                  <textarea 
                     value={newMessage} 
                     onChange={(e) => setNewMessage(e.target.value)} 
                     placeholder="Write your commitment..." 
@@ -592,5 +598,4 @@ export default function Home() {
       </div>
     </div>
   );
-                  }
-                 
+               }
