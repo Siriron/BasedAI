@@ -37,7 +37,9 @@ const getTodaysPuzzleIndex = () => {
   const today = new Date();
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
   return dayOfYear % DAILY_PUZZLES.length;
-};const calculateStreak = (commits, userAddress) => {
+};
+
+const calculateStreak = (commits, userAddress) => {
   if (!commits || !userAddress) return 0;
   const userCommits = commits.filter(c => c.user.toLowerCase() === userAddress.toLowerCase()).sort((a, b) => b.timestamp - a.timestamp);
   if (userCommits.length === 0) return 0;
@@ -64,6 +66,7 @@ const getAchievements = (streak, totalCommits, isPuzzleSolved) => {
   if (isPuzzleSolved) badges.push({ name: "Puzzle Solver", icon: "🧩" });
   return badges;
 };
+
 const Confetti = ({ show }) => {
   if (!show) return null;
   return (
@@ -374,8 +377,7 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        <div style={{display: 'grid', gridTemplateColumns: showLeaderboard ? 'repeat(auto-fit, minmax(500px, 1fr))' : '1fr', gap: '48px'}}>
+  <div style={{display: 'grid', gridTemplateColumns: showLeaderboard ? 'repeat(auto-fit, minmax(500px, 1fr))' : '1fr', gap: '48px'}}>
           
           <div>
             {account && (
@@ -481,7 +483,8 @@ export default function Home() {
                     style={{...inputStyle, minHeight: '120px', resize: 'vertical'}}
                     disabled={loading} 
                   />
-                                 <div style={{display: 'flex', gap: '16px', marginTop: '24px'}}>
+
+                  <div style={{display: 'flex', gap: '16px', marginTop: '24px'}}>
                     <button onClick={submitCommit} disabled={loading || !newMessage.trim()} style={{...buttonStyle, flex: 1}} onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 82, 255, 0.5)'} onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 82, 255, 0.3)'}>
                       {loading ? '⏳ Processing...' : '✅ SUBMIT'}
                     </button>
