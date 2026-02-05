@@ -1,4 +1,4 @@
- import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ethers } from 'ethers';
 import Head from 'next/head';
 
@@ -37,9 +37,7 @@ const getTodaysPuzzleIndex = () => {
   const today = new Date();
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
   return dayOfYear % DAILY_PUZZLES.length;
-};
-
-const calculateStreak = (commits, userAddress) => {
+};const calculateStreak = (commits, userAddress) => {
   if (!commits || !userAddress) return 0;
   const userCommits = commits.filter(c => c.user.toLowerCase() === userAddress.toLowerCase()).sort((a, b) => b.timestamp - a.timestamp);
   if (userCommits.length === 0) return 0;
@@ -66,7 +64,6 @@ const getAchievements = (streak, totalCommits, isPuzzleSolved) => {
   if (isPuzzleSolved) badges.push({ name: "Puzzle Solver", icon: "🧩" });
   return badges;
 };
-
 const Confetti = ({ show }) => {
   if (!show) return null;
   return (
@@ -262,10 +259,6 @@ export default function Home() {
     fetchCommits();
     const interval = setInterval(fetchCommits, 15000);
     return () => clearInterval(interval);
-  }, [fetchCommits]);useEffect(() => {
-    fetchCommits();
-    const interval = setInterval(fetchCommits, 15000);
-    return () => clearInterval(interval);
   }, [fetchCommits]);
 
   useEffect(() => {
@@ -274,7 +267,6 @@ export default function Home() {
 
   const formatAddress = (addr) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
-  // Styles
   const bg = darkMode ? '#111827' : '#FFFFFF';
   const cardBg = darkMode ? '#1F2937' : '#FFFFFF';
   const text = darkMode ? '#F9FAFB' : '#111827';
@@ -331,11 +323,14 @@ export default function Home() {
           0%, 100% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
           50% { box-shadow: 0 0 50px rgba(59, 130, 246, 0.6); }
         }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
         button:hover { transform: scale(1.05); filter: brightness(1.1); }
         button:active { transform: scale(0.98); }
       `}</style>
 
-      {/* Header */}
       <div style={{borderBottom: `2px solid ${border}`, padding: '24px', background: cardBg}}>
         <div style={{maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px'}}>
           <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
@@ -364,10 +359,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div style={{maxWidth: '1400px', margin: '0 auto', padding: '48px 24px'}}>
         
-        {/* Achievement Notification */}
         {newAchievements.length > 0 && (
           <div style={{position: 'fixed', top: '100px', right: '24px', zIndex: 9999, ...cardStyle, padding: '24px', maxWidth: '400px'}}>
             <p style={{fontSize: '18px', fontWeight: '700', marginBottom: '16px'}}>🎉 Achievement Unlocked!</p>
@@ -384,11 +377,9 @@ export default function Home() {
 
         <div style={{display: 'grid', gridTemplateColumns: showLeaderboard ? 'repeat(auto-fit, minmax(500px, 1fr))' : '1fr', gap: '48px'}}>
           
-          {/* Left Column */}
           <div>
             {account && (
               <>
-                {/* Stats Card */}
                 <div style={cardStyle}>
                   <h2 style={{fontSize: '28px', fontWeight: '900', marginBottom: '32px'}}>Your Stats</h2>
                   <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '32px'}}>
@@ -413,7 +404,66 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Commitment Card */}
+                <div style={cardStyle}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px'}}>
+                    <div style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, #8B5CF6, #7C3AED)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '24px',
+                      boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
+                      animation: 'pulse 2s ease-in-out infinite'
+                    }}>✨</div>
+                    <h2 style={{fontSize: '28px', fontWeight: '900'}}>AI Commit Helper</h2>
+                  </div>
+
+                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '16px', marginBottom: '32px'}}>
+                    {[
+                      {label: 'DeFi', gradient: 'linear-gradient(135deg, #10B981, #059669)', shadow: 'rgba(16, 185, 129, 0.4)', msg: 'Building a decentralized lending protocol on Base for accessible finance'},
+                      {label: 'NFT', gradient: 'linear-gradient(135deg, #EC4899, #DB2777)', shadow: 'rgba(236, 72, 153, 0.4)', msg: 'Launching an NFT marketplace with zero gas minting on Base'},
+                      {label: 'DAO', gradient: 'linear-gradient(135deg, #8B5CF6, #7C3AED)', shadow: 'rgba(139, 92, 246, 0.4)', msg: 'Developing DAO governance tools for decentralized decision-making on Base'},
+                      {label: 'Tools', gradient: 'linear-gradient(135deg, #3B82F6, #2563EB)', shadow: 'rgba(59, 130, 246, 0.4)', msg: 'Building developer tools to accelerate Base ecosystem growth'},
+                      {label: 'Social', gradient: 'linear-gradient(135deg, #F59E0B, #D97706)', shadow: 'rgba(245, 158, 11, 0.4)', msg: 'Building onchain social networks for authentic community engagement on Base'},
+                      {label: 'Gaming', gradient: 'linear-gradient(135deg, #A78BFA, #8B5CF6)', shadow: 'rgba(167, 139, 250, 0.4)', msg: 'Building onchain games with true asset ownership on Base'}
+                    ].map((btn, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setNewMessage(btn.msg)}
+                        style={{
+                          padding: '16px 28px',
+                          fontSize: '16px',
+                          fontWeight: '700',
+                          borderRadius: '12px',
+                          border: 'none',
+                          cursor: 'pointer',
+                          background: btn.gradient,
+                          color: '#FFF',
+                          boxShadow: `0 4px 16px ${btn.shadow}`,
+                          transition: 'all 0.3s',
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                          e.currentTarget.style.boxShadow = `0 8px 24px ${btn.shadow}`;
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.boxShadow = `0 4px 16px ${btn.shadow}`;
+                        }}
+                      >
+                        {btn.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <p style={{color: textGray, fontSize: '14px', marginBottom: '16px', fontWeight: '600'}}>
+                    Click a category above or write your own:
+                  </p>
+                </div>
+
                 <div style={cardStyle}>
                   <h2 style={{fontSize: '28px', fontWeight: '900', marginBottom: '32px'}}>Your Commitment</h2>
                   
@@ -431,8 +481,7 @@ export default function Home() {
                     style={{...inputStyle, minHeight: '120px', resize: 'vertical'}}
                     disabled={loading} 
                   />
-
-                  <div style={{display: 'flex', gap: '16px', marginTop: '24px'}}>
+                                 <div style={{display: 'flex', gap: '16px', marginTop: '24px'}}>
                     <button onClick={submitCommit} disabled={loading || !newMessage.trim()} style={{...buttonStyle, flex: 1}} onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 82, 255, 0.5)'} onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 82, 255, 0.3)'}>
                       {loading ? '⏳ Processing...' : '✅ SUBMIT'}
                     </button>
@@ -448,10 +497,7 @@ export default function Home() {
                       {txStatus}
                     </div>
                   )}
-                </div>
-
-                {/* Puzzle Card */}
-                <div style={cardStyle}>
+                </div><div style={cardStyle}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px'}}>
                     <h2 style={{fontSize: '28px', fontWeight: '900'}}>🧩 Daily Puzzle</h2>
                     {puzzleSolved && (
@@ -501,7 +547,6 @@ export default function Home() {
             )}
           </div>
 
-          {/* Leaderboard */}
           {showLeaderboard && leaderboard.length > 0 && (
             <div style={cardStyle}>
               <h2 style={{fontSize: '28px', fontWeight: '900', marginBottom: '32px'}}>🏆 Top Builders</h2>
@@ -534,7 +579,6 @@ export default function Home() {
           )}
         </div>
 
-        {/* Live Feed */}
         <div style={{marginTop: '64px'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px'}}>
             <h2 style={{fontSize: '36px', fontWeight: '900'}}>Live Feed</h2>
@@ -598,4 +642,4 @@ export default function Home() {
       </div>
     </div>
   );
-               }
+}
